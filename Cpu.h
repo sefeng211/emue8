@@ -1,12 +1,14 @@
 #ifndef CPU_H__
 #define CPU_H__
 
+#include "Gfx.h"
 #include "Memory.h"
 #include "Register.h"
-#include "Gfx.h"
 #include <memory>
+#include <tuple>
 
 #define CPU_FREQUENCY 800 // Cycles per seconds
+#define RATE_60 60
 
 class Cpu
 {
@@ -15,23 +17,36 @@ public:
       const std::shared_ptr<Register>& aRegister,
       const std::shared_ptr<Gfx>& aGfx);
 
+  void DoOperation();
+
   void ExecuteOpcode();
 
 private:
   uint16_t pc = 0x200; // Program Counter starts as 0x200
 
-  uint16_t GetNextOpcode();
+  uint32_t mCycleCount = CPU_FREQUENCY;
+
+  std::tuple<const int, int> m60Hz =
+    std::make_tuple(CPU_FREQUENCY / RATE_60, RATE_60);
+
   std::shared_ptr<Memory> mMemory;
   std::shared_ptr<Register> mRegister;
   std::shared_ptr<Gfx> mGfx;
 
+  uint16_t GetNextOpcode();
+  bool DoThingsAt60Hz();
+
+  void UpdateTimer();
+
+private:
   /* ------------------ CPU Instructions ------------- */
   void Do0nnn();
   void Do00E0();
-  void Do1nnn();
+  void Do1nnn(uint16_t nnn);
   void Do2nnn();
   void Do3xkk();
-  void Do4xkk();
+  // SNE Vx, byte
+  void Do4xkk(uint8_t x, uint8_t kk);
   void Do5xy0();
   // LD Vx, byte
   // Set Vx = kk
@@ -43,7 +58,7 @@ private:
   void Do8xy1();
   void Do8xy2();
   void Do8xy3();
-  void Do8xy4();
+  void Do8xy4(uint8_t x, uint8_t y);
   void Do8xy5();
   void Do8xy6();
   void Do8xy7();
@@ -61,6 +76,7 @@ private:
   void DoExA1();
   void DoFx07();
   void DoFx0A();
+  // LD DT, Vx
   void DoFx15(uint8_t x);
   void DoFx18();
   void DoFx1E();

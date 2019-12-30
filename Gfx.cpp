@@ -1,8 +1,10 @@
 #include "Gfx.h"
 #include <algorithm>
+#include <bitset>
+#include <iostream>
 #include <iterator>
 
-Gfx::Gfx(const int aCpuFrequency): mRefreshCycle(aCpuFrequency / REFRESH_RATE)
+Gfx::Gfx()
 {
 
   // Start SDL
@@ -26,18 +28,15 @@ Gfx::Gfx(const int aCpuFrequency): mRefreshCycle(aCpuFrequency / REFRESH_RATE)
 
   SDL_RenderSetLogicalSize(mRenderer, LOGIC_WIDTH, LOGIC_HEIGHT);
 
-  //std::fill(std::begin(mPixels), std::end(mPixels), 0xFFFFFFFF);
-  memset(mPixels, 255, LOGIC_WIDTH * LOGIC_HEIGHT * sizeof(uint32_t));
-
-  printf("123123123123Printing %x\n", mPixels[0]);
-  printf("123123123123Printing %p\n", mPixels);
+  std::fill(std::begin(mPixels), std::end(mPixels), 0xFFFFFFFF);
 }
 
 void
 Gfx::UpdateScreen()
 {
-  int ret = SDL_UpdateTexture(mTexture, NULL, mPixels, LOGIC_WIDTH * sizeof(uint32_t));
-  printf("123123123123Printing %p\n", mPixels);
+  printf("Update SCreen !\n");
+  int ret =
+    SDL_UpdateTexture(mTexture, NULL, mPixels, LOGIC_WIDTH * sizeof(uint32_t));
   if (ret != 0) {
     printf("Failed to update Texture \n");
   }
@@ -55,29 +54,44 @@ Gfx::~Gfx()
 }
 
 void
-Gfx::DoDxyn(uint8_t aVx, uint8_t aVy, uint8_t* aByteArray, size_t aSize)
+Gfx::DoDxyn(uint8_t aVx,
+            uint8_t aVy,
+            uint8_t* aByteArray,
+            size_t aSize,
+            bool& aCollision)
 {
-  size_t startIndex = aVx + aVy * LOGIC_WIDTH;
 
-  //PrintPixels();
+  printf("Before\n");
+  PrintPixels();
   for (int i = 0; i < aSize; i++) { // For each row
+    size_t startIndex = aVx + (aVy + i) * LOGIC_WIDTH;
     for (int k = 7; k >= 0; k--) {
-      bool isSet = aByteArray[i] & (1 << k);
+      bool isNotSet = aByteArray[i] & (1 << k);
 
-      if (isSet) {
+      if (!isNotSet) {
         mPixels[startIndex] ^= 0x00000000;
       } else {
+        // Check if any of the pixels changed from 1 to 0
+        if (mPixels[startIndex] == 0xFFFFFFFF) {
+          aCollision = true;
+        }
         mPixels[startIndex] ^= 0xFFFFFFFF;
       }
       startIndex++;
     }
   }
+  printf("After\n");
+  PrintPixels();
 }
 
-void Gfx::PrintPixels() {
+void
+Gfx::PrintPixels()
+{
   for (int i = 0; i < LOGIC_WIDTH * LOGIC_HEIGHT; i++) {
     if (mPixels[i] == 0xFFFFFFFF) {
       printf("0 ");
+    } else {
+      printf("1 ");
     }
 
     if (i % 64 == 0) {
