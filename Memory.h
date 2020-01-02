@@ -37,6 +37,8 @@ public:
   void LoadProgramIntoMemory(const char* aFileInput);
   void LoadETIProgramIntoMemory(const char* aFileInput);
 
+  void SaveByteTo(uint16_t aLocation, uint8_t aByte);
+
   uint8_t GetByteAt(std::size_t aIndex);
   ~Memory() {}
 #ifdef DEBUG
@@ -45,7 +47,7 @@ public:
 #endif
 
 private:
-  const uint8_t data[MEMORY_LIMIT] = { 0 };
+  uint8_t data[MEMORY_LIMIT] = { 0 };
 };
 
 #endif

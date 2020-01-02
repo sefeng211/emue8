@@ -61,7 +61,7 @@ Gfx::DoDxyn(uint8_t aVx,
             bool& aCollision)
 {
 
-  printf("Before\n");
+  printf("\nBefore\n");
   PrintPixels();
   for (int i = 0; i < aSize; i++) { // For each row
     size_t startIndex = aVx + (aVy + i) * LOGIC_WIDTH;
@@ -80,7 +80,7 @@ Gfx::DoDxyn(uint8_t aVx,
       startIndex++;
     }
   }
-  printf("After\n");
+  printf("\nAfter\n");
   PrintPixels();
 }
 

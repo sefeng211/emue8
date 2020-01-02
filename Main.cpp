@@ -20,6 +20,9 @@ main(int argc, char* argv[])
 
   Cpu cpu(mem, reg, gfx);
 
+#ifdef DEBUG
+    mem->PrintOutMemory();
+#endif
   // Assume each opcode takes 2 cpu cycles, it means the main loop should
   // run CPU_FREQUENCY / 2 times per second
   uint32_t sleepMS = 1.0 / (CPU_FREQUENCY / 2) * 1000000;
@@ -30,7 +33,7 @@ main(int argc, char* argv[])
   bool quit = false;
   while (!quit) {
 
-  //for (int i= 0; i< 30; i++) {
+  //for (int i= 0; i< 20; i++) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
         quit = true;

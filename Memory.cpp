@@ -29,9 +29,18 @@ Memory::LoadProgramIntoMemory(const char* aFileInput)
   }
 
   ifs.read((char*)data + 0x200, size);
-#ifdef DEBUG
-  PrintOutMemory();
+}
+
+void
+Memory::SaveByteTo(uint16_t aLocation, uint8_t aByte)
+{
+#if DEBUG
+  if (data[aLocation] != 0) {
+    printf("Warn: Overwrite memory location\n");
+    // std::exit(1);
+  }
 #endif
+  data[aLocation] = aByte;
 }
 
 void
@@ -41,9 +50,11 @@ Memory::LoadETIProgramIntoMemory(const char* aFileInput)
 }
 
 uint8_t
-Memory::GetByteAt(size_t aIndex) {
+Memory::GetByteAt(size_t aIndex)
+{
   if (aIndex >= MEMORY_LIMIT) {
     cout << "GetByteAt: Invalid index" << endl;
+    std::exit(1);
     return 0;
   }
 
@@ -71,18 +82,21 @@ Memory::PrintOutMemoryByRange(size_t aStart, size_t aEnd)
 void
 Memory::PrintOutMemory()
 {
-  cout << " ---------------- 0x000 (0) -------------------- " << endl;
-  PrintOutMemoryByRange(0, 0x200);
-  cout << endl;
-  cout << " ---------------- 0x200 (512) ------------------ " << endl;
+  for (size_t i = 0; i<4096; i++) {
+    printf("%d: %x \n", i, data[i]);
+  }
+  //cout << " ---------------- 0x000 (0) -------------------- " << endl;
+  //PrintOutMemoryByRange(0, 0x200);
+  //cout << endl;
+  //cout << " ---------------- 0x200 (512) ------------------ " << endl;
 
-  PrintOutMemoryByRange(0x200, 0x600);
-  cout << endl;
-  cout << " ---------------- 0x600 (1536) ------------------ " << endl;
+  //PrintOutMemoryByRange(0x200, 0x600);
+  //cout << endl;
+  //cout << " ---------------- 0x600 (1536) ------------------ " << endl;
 
-  PrintOutMemoryByRange(0x600, 0xFFF);
-  cout << endl;
-  cout << " ---------------- 0xFFF (4095) ------------------ " << endl;
+  //PrintOutMemoryByRange(0x600, 0xFFF);
+  //cout << endl;
+  //cout << " ---------------- 0xFFF (4095) ------------------ " << endl;
 }
 
 #endif
