@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_compile_definitions(DEBUG)
 # add the executable
-add_executable(enum8 Main.cpp Memory.cpp Cpu.cpp Gfx.cpp)
+add_executable(enum8 Main.cpp Memory.cpp Cpu.cpp Gfx.cpp Keyboard.cpp)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -lSDL2)
 

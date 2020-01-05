@@ -18,6 +18,7 @@ Gfx::Gfx()
   if (!mWindow || !mRenderer) {
     printf("Window or Renderer could not be created! SDL_Error: %s\n",
            SDL_GetError());
+    std::exit(1);
   }
 
   mTexture = SDL_CreateTexture(mRenderer,
@@ -28,7 +29,7 @@ Gfx::Gfx()
 
   SDL_RenderSetLogicalSize(mRenderer, LOGIC_WIDTH, LOGIC_HEIGHT);
 
-  std::fill(std::begin(mPixels), std::end(mPixels), 0xFFFFFFFF);
+  std::fill(std::begin(mPixels), std::end(mPixels), BLACK_PIXEL);
 }
 
 void
@@ -43,6 +44,12 @@ Gfx::UpdateScreen()
   SDL_RenderClear(mRenderer);
   SDL_RenderCopy(mRenderer, mTexture, NULL, NULL);
   SDL_RenderPresent(mRenderer);
+}
+
+void
+Gfx::ClearScreen()
+{
+  std::fill(std::begin(mPixels), std::end(mPixels), BLACK_PIXEL);
 }
 
 Gfx::~Gfx()
@@ -69,13 +76,13 @@ Gfx::DoDxyn(uint8_t aVx,
       bool isNotSet = aByteArray[i] & (1 << k);
 
       if (!isNotSet) {
-        mPixels[startIndex] ^= 0x00000000;
+        mPixels[startIndex] ^= BLACK_PIXEL;
       } else {
         // Check if any of the pixels changed from 1 to 0
-        if (mPixels[startIndex] == 0xFFFFFFFF) {
+        if (mPixels[startIndex] == WHITE_PIXEL) {
           aCollision = true;
         }
-        mPixels[startIndex] ^= 0xFFFFFFFF;
+        mPixels[startIndex] ^= WHITE_PIXEL;
       }
       startIndex++;
     }
@@ -88,7 +95,7 @@ void
 Gfx::PrintPixels()
 {
   for (int i = 0; i < LOGIC_WIDTH * LOGIC_HEIGHT; i++) {
-    if (mPixels[i] == 0xFFFFFFFF) {
+    if (mPixels[i] == BLACK_PIXEL) {
       printf("0 ");
     } else {
       printf("1 ");

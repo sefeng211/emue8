@@ -8,6 +8,9 @@
 #define LOGIC_HEIGHT 32
 #define LOGIC_WIDTH 64
 
+#define BLACK_PIXEL 0x00000000
+#define WHITE_PIXEL 0xFFFFFFFF
+
 #define REFRESH_RATE 60 // A second refresh 60 times
 
 class Gfx
@@ -17,6 +20,7 @@ public:
   ~Gfx();
 
   void UpdateScreen();
+  void ClearScreen();
   void DoDxyn(uint8_t aVx,
               uint8_t aVy,
               uint8_t* aByteArray,

@@ -21,8 +21,10 @@ public:
   }
 #endif
 
-  uint8_t registers[16] = {0}; // 16 general-purpose registers
   uint16_t I = 0;
+  uint8_t SP = 0; // Stack Pointer; Always point to the top of the stack
+
+  uint8_t registers[16] = {0}; // 16 general-purpose registers
   uint8_t delayTimer = 0;
   uint8_t soundTimer = 0;
 };

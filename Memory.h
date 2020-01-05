@@ -29,6 +29,7 @@
 #include <cstdint>
 
 #define MEMORY_LIMIT 4096
+#define STACK_LIMIT 16
 
 class Memory
 {
@@ -38,8 +39,18 @@ public:
   void LoadETIProgramIntoMemory(const char* aFileInput);
 
   void SaveByteTo(uint16_t aLocation, uint8_t aByte);
-
   uint8_t GetByteAt(std::size_t aIndex);
+
+  void addToStack(uint8_t& aSP, uint16_t aData) {
+    mStack[aSP] = aData;
+    aSP = aSP + 1;
+  }
+
+  uint16_t popFromStack(uint8_t& aSP) {
+    aSP = aSP - 1;
+    uint16_t ret = mStack[aSP];
+    return ret;
+  }
   ~Memory() {}
 #ifdef DEBUG
   void PrintOutMemory();
@@ -48,6 +59,8 @@ public:
 
 private:
   uint8_t data[MEMORY_LIMIT] = { 0 };
+
+  uint16_t mStack[STACK_LIMIT] = { 0 };
 };
 
 #endif

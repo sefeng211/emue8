@@ -2,12 +2,13 @@
 #define CPU_H__
 
 #include "Gfx.h"
+#include "Keyboard.h"
 #include "Memory.h"
 #include "Register.h"
 #include <memory>
 #include <tuple>
 
-#define CPU_FREQUENCY 800 // Cycles per seconds
+#define CPU_FREQUENCY 1500 // Cycles per seconds
 #define RATE_60 60
 #define FONTSET_SIZE 80
 
@@ -35,7 +36,8 @@ class Cpu
 public:
   Cpu(const std::shared_ptr<Memory>& aMemory,
       const std::shared_ptr<Register>& aRegister,
-      const std::shared_ptr<Gfx>& aGfx);
+      const std::shared_ptr<Gfx>& aGfx,
+      const std::shared_ptr<Keyboard>& aKeyboard);
 
   void DoOperation();
 
@@ -52,6 +54,7 @@ private:
   std::shared_ptr<Memory> mMemory;
   std::shared_ptr<Register> mRegister;
   std::shared_ptr<Gfx> mGfx;
+  std::shared_ptr<Keyboard> mKeyboard;
 
   uint16_t GetNextOpcode();
   bool DoThingsAt60Hz();
@@ -60,11 +63,14 @@ private:
   void UpdateTimer();
 
 private:
+
+  bool mPause = false;
   /* ------------------ CPU Instructions ------------- */
   void Do0nnn();
   void Do00E0();
+  void Do00EE();
   void Do1nnn(uint16_t nnn);
-  void Do2nnn();
+  void Do2nnn(uint16_t nnn);
   void Do3xkk(uint8_t x, uint8_t kk);
   // SNE Vx, byte
   void Do4xkk(uint8_t x, uint8_t kk);
@@ -76,34 +82,34 @@ private:
   // Add Vx, byte
   void Do7xkk(uint8_t x, uint8_t kk);
   void Do8xy0(uint8_t x, uint8_t y);
-  void Do8xy1();
-  void Do8xy2();
-  void Do8xy3(uint8_t x ,uint8_t y);
+  void Do8xy1(uint8_t x, uint8_t y);
+  void Do8xy2(uint8_t x, uint8_t y);
+  void Do8xy3(uint8_t x, uint8_t y);
   void Do8xy4(uint8_t x, uint8_t y);
   void Do8xy5(uint8_t x, uint8_t y);
-  void Do8xy6();
-  void Do8xy7();
-  void Do8xyE();
+  void Do8xy6(uint8_t x, uint8_t y);
+  void Do8xy7(uint8_t x, uint8_t y);
+  void Do8xyE(uint8_t x, uint8_t y);
   void Do9xy0(uint8_t x, uint8_t y);
   // LD I, addr
   // Set I = nnnn
   // The value of register I is set to nnn
   void DoAnnn(uint16_t nnn);
-  void DoBnnn();
-  void DoCxkk();
+  void DoBnnn(uint16_t nnn);
+  void DoCxkk(uint8_t x, uint8_t kk);
   // DRW Vx, Vy, nibble
   void DoDxyn(uint8_t x, uint8_t y, uint8_t n);
-  void DoEx9E();
-  void DoExA1();
-  void DoFx07();
-  void DoFx0A();
+  void DoEx9E(uint8_t x);
+  void DoExA1(uint8_t x);
+  void DoFx07(uint8_t x);
+  void DoFx0A(uint8_t x);
   // LD DT, Vx
   void DoFx15(uint8_t x);
-  void DoFx18();
+  void DoFx18(uint8_t x);
   // Add I, Vx
   void DoFx1E(uint8_t x);
   void DoFx29(uint8_t x);
-  void DoFx33();
+  void DoFx33(uint8_t x);
   void DoFx55(uint8_t x);
   void DoFx65(uint8_t x);
 };
