@@ -47,9 +47,9 @@ Cpu::DoOperation()
   }
 
   if (!mPause) {
-    printf("Not Paused, Increment pc\n");
     pc += 2;
   }
+
   mCycleCount -= 2;
 }
 
@@ -58,117 +58,118 @@ Cpu::ExecuteOpcode()
 {
   uint16_t opcode = std::move(GetNextOpcode());
   uint8_t leastSigByte = opcode >> 12;
+
+#ifdef DEBUG
   printf("opcode: %x, pc: %d\n", opcode, pc);
+#endif
+
   switch (leastSigByte) {
     case 0x00: {
       switch (opcode) {
         case 0x00E0: {
-          cout << "0x00E0" << endl;
           Do00E0();
           break;
         }
         case 0x00EE: {
-          cout << "0x00EE" << endl;
           Do00EE();
           break;
         }
         default: {
-          // 0x0nnn
-          uint16_t nnn = opcode & 0x0FFF;
-          // Do0nnn(nnn);
-          printf("Unsupported %x\n", opcode);
-          // std::exit(1);
+          printf("Unsupported, Skip it:%x\n", opcode);
           break;
         }
       }
       break;
     }
     case 0x01: {
-      cout << "0x01" << endl;
       uint16_t nnn = opcode & 0x0FFF;
       Do1nnn(nnn);
       break;
     }
     case 0x02: {
-      cout << "0x02" << endl;
       uint16_t nnn = opcode & 0x0FFF;
       Do2nnn(nnn);
       break;
     }
     case 0x03: {
-      cout << "0x03" << endl;
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t kk = opcode & 0x00FF;
       Do3xkk(x, kk);
       break;
     }
     case 0x04: {
-      cout << "0x04" << endl;
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t kk = opcode & 0x00FF;
       Do4xkk(x, kk);
       break;
     }
     case 0x05: {
-      cout << "0x05" << endl;
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t y = (opcode & 0x00F0) >> 4;
       Do5xy0(x, y);
       break;
     }
     case 0x06: {
-      cout << "0x06" << endl;
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t kk = opcode & 0x00FF;
       Do6xkk(x, kk);
       break;
     }
     case 0x08: {
-      cout << "0x08" << endl;
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t y = (opcode & 0x00F0) >> 4;
       uint8_t n = (opcode & 0x000F);
-      if (n == 0x04) {
-        Do8xy4(x, y);
-        break;
-      } else if (n == 0x00) {
-        Do8xy0(x, y);
-        break;
-      } else if (n == 0x01) {
-        Do8xy1(x, y);
-        break;
-      } else if (n == 0x02) {
-        Do8xy2(x, y);
-        break;
-      } else if (n == 0x05) {
-        Do8xy5(x, y);
-        break;
-      } else if (n == 0x06) {
-        Do8xy6(x, y);
-        break;
-      } else if (n == 0x07) {
-        Do8xy7(x, y);
-        break;
-      } else if (n == 0x03) {
-        Do8xy3(x, y);
-        break;
-      } else if (n == 0x0E) {
-        Do8xyE(x, y);
-        break;
-      } else {
-        printf("Unsupported %x\n", opcode);
-        std::exit(1);
+      switch (n) {
+        case 0x00: {
+          Do8xy0(x, y);
+          break;
+        }
+        case 0x01: {
+          Do8xy1(x, y);
+          break;
+        }
+        case 0x02: {
+          Do8xy2(x, y);
+          break;
+        }
+        case 0x03: {
+          Do8xy3(x, y);
+          break;
+        }
+        case 0x04: {
+          Do8xy4(x, y);
+          break;
+        }
+        case 0x05: {
+          Do8xy5(x, y);
+          break;
+        }
+        case 0x06: {
+          Do8xy6(x, y);
+          break;
+        }
+        case 0x07: {
+          Do8xy7(x, y);
+          break;
+        }
+        case 0x0E: {
+          Do8xyE(x, y);
+          break;
+        }
+        default: {
+          printf("Unsupported %x\n", opcode);
+          std::exit(1);
+        }
       }
+      break;
     }
     case 0x09: {
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t y = (opcode & 0x00F0) >> 4;
-      cout << "0x09" << endl;
       Do9xy0(x, y);
       break;
     }
     case 0x0A: {
-      cout << "0x0A" << endl;
       uint16_t nnn = opcode & 0x0FFF;
       DoAnnn(nnn);
       break;
@@ -179,16 +180,13 @@ Cpu::ExecuteOpcode()
       DoBnnn(nnn);
       break;
     }
-
     case 0x0C: {
-      cout << "0x0C" << endl;
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t kk = opcode & 0x00FF;
       DoCxkk(x, kk);
       break;
     }
     case 0x0D: {
-      printf("0x0D: %x\n", opcode);
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t y = (opcode & 0x00F0) >> 4;
       uint8_t n = (opcode & 0x000F);
@@ -205,11 +203,11 @@ Cpu::ExecuteOpcode()
           break;
         }
         case 0xA1: {
-          printf("0xExA1 %x\n", opcode);
           DoExA1(x);
           break;
         }
         default: {
+          printf("Unsupported opcode\n");
           std::exit(1);
           break;
         }
@@ -217,7 +215,6 @@ Cpu::ExecuteOpcode()
       break;
     }
     case 0x07: {
-      printf("0x07: %x\n", opcode);
       uint8_t x = (opcode & 0x0F00) >> 8;
       uint8_t kk = opcode & 0x00FF;
       Do7xkk(x, kk);
@@ -229,7 +226,6 @@ Cpu::ExecuteOpcode()
       uint8_t subopcode = opcode & 0x00FF;
       switch (subopcode) {
         case 0x07: {
-          printf("0xFx07: %x\n", opcode);
           DoFx07(x);
           break;
         }
@@ -238,13 +234,10 @@ Cpu::ExecuteOpcode()
           break;
         }
         case 0x15: {
-          printf("0xFx15: %x\n", opcode);
           DoFx15(x);
           break;
         }
         case 0x18: {
-          printf("0xFx18: %x\n", opcode);
-
           DoFx18(x);
           break;
         }
@@ -269,8 +262,7 @@ Cpu::ExecuteOpcode()
           break;
         }
         default: {
-          cout << "Unknown opcode: ";
-          printf("%x %x\n", leastSigByte, opcode);
+          printf("Unknown opcode\n");
           std::exit(1);
           break;
         }
@@ -278,10 +270,10 @@ Cpu::ExecuteOpcode()
       break;
     }
     default: {
-      cout << "Unknown opcode: ";
-      printf("%x %x\n", leastSigByte, opcode);
+      printf("Unknown opcode\n");
       std::exit(1);
-    } break;
+      break;
+    }
   }
 }
 
@@ -297,7 +289,6 @@ Cpu::GetNextOpcode()
   uint8_t firstByte = mMemory->GetByteAt(pc);
   uint8_t secondByte = mMemory->GetByteAt(pc + 1);
 
-  // pc += 2;
   return (firstByte << 8) | secondByte;
 }
 
@@ -401,7 +392,6 @@ Cpu::Do8xy4(uint8_t x, uint8_t y)
 {
   uint8_t sum = mRegister->registers[x] + mRegister->registers[y];
 
-https: // stackoverflow.com/a/49024747/6766207
   if (sum < x) {
     mRegister->registers[0x0F] = 1;
   } else {
@@ -501,22 +491,12 @@ Cpu::DoDxyn(uint8_t x, uint8_t y, uint8_t n)
 {
   uint16_t address = mRegister->I;
 
-  // if (address == 0) {
-  //// Error
-  // cout << "This address shouldn't be 0" << endl;
-  // std::exit(1);
-  // return;
-  //}
-
   uint8_t nBytes[n];
 
   // Get the rows that we need to draw
   for (int i = 0; i < n; i++) {
     nBytes[i] = mMemory->GetByteAt(i + address);
-    // printf("Read: %x\n", nBytes[i]);
     std::bitset<8> x(nBytes[i]);
-    std::cout << "Read: " << x << std::endl;
-    // printf("Read: %x\n", nBytes[i]);
   }
 
   // (Vx, Vy)
@@ -524,7 +504,6 @@ Cpu::DoDxyn(uint8_t x, uint8_t y, uint8_t n)
   uint8_t vy = mRegister->registers[y];
 
   bool collision = false;
-  // mGfx->DoDxyn(vx, vy, nBytes, n, collision);
   mGfx->DoDxyn(vx, vy, nBytes, n, collision);
 
   if (collision) {
@@ -532,14 +511,6 @@ Cpu::DoDxyn(uint8_t x, uint8_t y, uint8_t n)
   } else {
     mRegister->registers[0x0F] = 0;
   }
-
-  // Debugging
-  // printf("V%x: %x, V%x: %x \n", x, vx, y, vy);
-  // printf("Data: ");
-  // for (int i = 0; i < n; i++) {
-  // printf("%x ", nBytes[i]);
-  //}
-  // printf("\n");
 }
 
 void
@@ -615,5 +586,4 @@ Cpu::DoFx65(uint8_t x)
   for (size_t i = 0; i <= x; i++) {
     mRegister->registers[i] = mMemory->GetByteAt(address + i);
   }
-  mMemory->PrintOutMemory();
 }

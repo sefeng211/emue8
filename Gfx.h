@@ -27,7 +27,9 @@ public:
               size_t aSize,
               bool& aCollision);
 
+#ifdef DEBUG
   void PrintPixels();
+#endif
 
 private:
   SDL_Window* mWindow = nullptr;

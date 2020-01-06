@@ -28,18 +28,18 @@ main(int argc, char* argv[])
 #ifdef DEBUG
   mem->PrintOutMemory();
 #endif
-  // Assume each opcode takes 2 cpu cycles, it means the main loop should
-  // run CPU_FREQUENCY / 2 times per second
+
   uint32_t sleepMS = 1.0 / (CPU_FREQUENCY / 2) * 1000000;
-  std::chrono::microseconds dura(sleepMS);
+  // The initial assumption is each opcode takes 2 cpu cycles, it means the main
+  // loop should run CPU_FREQUENCY / 2 times per second. There are caveats
+  // though, such as things like context switches and graphic rendering all take
+  // extra cycles. So we do a minus 100 here.
+  std::chrono::microseconds dura(sleepMS - 100);
 
   SDL_Event event;
 
   bool quit = false;
   while (!quit) {
-
-    // keyboard->Reset();
-    // for (int i= 0; i< 20; i++) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
         quit = true;
@@ -153,11 +153,9 @@ main(int argc, char* argv[])
     }
 
     cpu.DoOperation();
-    // cpu.ExecuteOpcode(); // 2 cpu cycle
-
-    // gfx->UpdateScreen(cpuCycle);
-
+#ifdef DEBUG
     reg->PrintRegister();
+#endif
 
     // A note is that waking up thread also takes time, however we don't
     // accommodate them at the moment

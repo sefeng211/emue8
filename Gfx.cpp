@@ -10,7 +10,7 @@ Gfx::Gfx()
   // Start SDL
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
     printf("Failed to init SDL\n");
-    return;
+    std::exit(1);
   }
   SDL_CreateWindowAndRenderer(
     WINDOW_WIDTH, WINDOW_HEIGHT, 0, &mWindow, &mRenderer);
@@ -35,11 +35,11 @@ Gfx::Gfx()
 void
 Gfx::UpdateScreen()
 {
-  printf("Update SCreen !\n");
   int ret =
     SDL_UpdateTexture(mTexture, NULL, mPixels, LOGIC_WIDTH * sizeof(uint32_t));
   if (ret != 0) {
     printf("Failed to update Texture \n");
+    std::exit(1);
   }
   SDL_RenderClear(mRenderer);
   SDL_RenderCopy(mRenderer, mTexture, NULL, NULL);
@@ -67,9 +67,6 @@ Gfx::DoDxyn(uint8_t aVx,
             size_t aSize,
             bool& aCollision)
 {
-
-  printf("\nBefore\n");
-  PrintPixels();
   for (int i = 0; i < aSize; i++) { // For each row
     size_t startIndex = aVx + (aVy + i) * LOGIC_WIDTH;
     for (int k = 7; k >= 0; k--) {
@@ -78,7 +75,8 @@ Gfx::DoDxyn(uint8_t aVx,
       if (!isNotSet) {
         mPixels[startIndex] ^= BLACK_PIXEL;
       } else {
-        // Check if any of the pixels changed from 1 to 0
+        // If the existing pixel is WHITE, this means the pixel is
+        // going to be flipped from 1 to 0;
         if (mPixels[startIndex] == WHITE_PIXEL) {
           aCollision = true;
         }
@@ -87,10 +85,9 @@ Gfx::DoDxyn(uint8_t aVx,
       startIndex++;
     }
   }
-  printf("\nAfter\n");
-  PrintPixels();
 }
 
+#ifdef DEBUG
 void
 Gfx::PrintPixels()
 {
@@ -106,3 +103,4 @@ Gfx::PrintPixels()
     }
   }
 }
+#endif

@@ -12,7 +12,7 @@ Memory::LoadProgramIntoMemory(const char* aFileInput)
   std::ifstream ifs(aFileInput, std::ios::binary | std::ios::ate);
   if (!ifs) {
     cout << "Failed to open the program" << endl;
-    return;
+    std::exit(1);
   }
 
   auto end = ifs.tellg();
@@ -25,7 +25,7 @@ Memory::LoadProgramIntoMemory(const char* aFileInput)
 
   if (size > MEMORY_LIMIT) {
     cout << "Program exceeds the limit of the memory" << endl;
-    return;
+    std::exit(1);
   }
 
   ifs.read((char*)data + 0x200, size);
@@ -34,12 +34,6 @@ Memory::LoadProgramIntoMemory(const char* aFileInput)
 void
 Memory::SaveByteTo(uint16_t aLocation, uint8_t aByte)
 {
-#if DEBUG
-  if (data[aLocation] != 0) {
-    printf("Warn: Overwrite memory location\n");
-    // std::exit(1);
-  }
-#endif
   data[aLocation] = aByte;
 }
 
@@ -55,9 +49,7 @@ Memory::GetByteAt(size_t aIndex)
   if (aIndex >= MEMORY_LIMIT) {
     cout << "GetByteAt: Invalid index" << endl;
     std::exit(1);
-    return 0;
   }
-
   return data[aIndex];
 }
 
@@ -82,21 +74,21 @@ Memory::PrintOutMemoryByRange(size_t aStart, size_t aEnd)
 void
 Memory::PrintOutMemory()
 {
-  for (size_t i = 0; i<4096; i++) {
+  for (size_t i = 0; i < 4096; i++) {
     printf("%d: %x \n", i, data[i]);
   }
-  //cout << " ---------------- 0x000 (0) -------------------- " << endl;
-  //PrintOutMemoryByRange(0, 0x200);
-  //cout << endl;
-  //cout << " ---------------- 0x200 (512) ------------------ " << endl;
+  // cout << " ---------------- 0x000 (0) -------------------- " << endl;
+  // PrintOutMemoryByRange(0, 0x200);
+  // cout << endl;
+  // cout << " ---------------- 0x200 (512) ------------------ " << endl;
 
-  //PrintOutMemoryByRange(0x200, 0x600);
-  //cout << endl;
-  //cout << " ---------------- 0x600 (1536) ------------------ " << endl;
+  // PrintOutMemoryByRange(0x200, 0x600);
+  // cout << endl;
+  // cout << " ---------------- 0x600 (1536) ------------------ " << endl;
 
-  //PrintOutMemoryByRange(0x600, 0xFFF);
-  //cout << endl;
-  //cout << " ---------------- 0xFFF (4095) ------------------ " << endl;
+  // PrintOutMemoryByRange(0x600, 0xFFF);
+  // cout << endl;
+  // cout << " ---------------- 0xFFF (4095) ------------------ " << endl;
 }
 
 #endif

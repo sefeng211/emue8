@@ -2,6 +2,7 @@
 #define Keyboard_H__
 
 #include <cstdint>
+#include <vector>
 
 // 1|2|3|C
 // 4|5|6|D
@@ -40,8 +41,6 @@ public:
 
   void SetKeyDown(KeyboardMapping aKey);
   void SetKeyUp(KeyboardMapping aKey);
-
-  //void Reset();
 
   bool mKeyboard[uint8_t(KeyboardMapping::COUNT)] = { false };
 };

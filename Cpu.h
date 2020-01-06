@@ -1,14 +1,15 @@
 #ifndef CPU_H__
 #define CPU_H__
 
+#include <memory>
+#include <tuple>
+
 #include "Gfx.h"
 #include "Keyboard.h"
 #include "Memory.h"
 #include "Register.h"
-#include <memory>
-#include <tuple>
 
-#define CPU_FREQUENCY 1500 // Cycles per seconds
+#define CPU_FREQUENCY 1600 // Cycles per seconds
 #define RATE_60 60
 #define FONTSET_SIZE 80
 
@@ -63,7 +64,6 @@ private:
   void UpdateTimer();
 
 private:
-
   bool mPause = false;
   /* ------------------ CPU Instructions ------------- */
   void Do0nnn();
