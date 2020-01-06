@@ -1,6 +1,6 @@
 Emue8 is a Chip-8 emulator written in C++ and SDL2.
 
-I have only tested in on `Linux`, however I think it's compatible in other platforms.
+I have only tested on `Linux`, however I think it's compatible on other platforms.
 
 Compile
 ```
