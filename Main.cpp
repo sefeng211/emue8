@@ -15,7 +15,6 @@
 int
 main(int argc, char* argv[])
 {
-
   std::shared_ptr<Memory> mem = std::make_shared<Memory>();
   std::shared_ptr<Register> reg = std::make_shared<Register>();
   std::shared_ptr<Gfx> gfx = std::make_shared<Gfx>();
