@@ -13,7 +13,7 @@
 #define RATE_60 60
 #define FONTSET_SIZE 80
 
-static uint8_t FONTSET[FONTSET_SIZE] = {
+const uint8_t FONTSET[FONTSET_SIZE] = {
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
   0x20, 0x60, 0x20, 0x20, 0x70, // 1
   0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -47,7 +47,7 @@ public:
 private:
   uint16_t pc = 0x200; // Program Counter starts as 0x200
 
-  uint32_t mCycleCount = CPU_FREQUENCY;
+  int mCycleCount = CPU_FREQUENCY;
 
   std::tuple<const int, int> m60Hz =
     std::make_tuple(CPU_FREQUENCY / RATE_60, RATE_60);

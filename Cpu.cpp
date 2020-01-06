@@ -24,7 +24,7 @@ Cpu::Cpu(const std::shared_ptr<Memory>& aMemory,
 void
 Cpu::StoreFontSet()
 {
-  for (size_t i = 0; i < FONTSET_SIZE; i++) {
+  for (uint16_t i = 0; i < FONTSET_SIZE; i++) {
     mMemory->SaveByteTo(i, FONTSET[i]);
   }
 }
@@ -414,7 +414,7 @@ Cpu::Do8xy5(uint8_t x, uint8_t y)
 }
 
 void
-Cpu::Do8xy6(uint8_t x, uint8_t y)
+Cpu::Do8xy6(uint8_t x, uint8_t y __attribute__((unused)))
 {
   if (mRegister->registers[x] & 0x1) {
     mRegister->registers[0x0F] = 1;
@@ -436,7 +436,7 @@ Cpu::Do8xy7(uint8_t x, uint8_t y)
   mRegister->registers[x] = mRegister->registers[y] - mRegister->registers[x];
 }
 void
-Cpu::Do8xyE(uint8_t x, uint8_t y)
+Cpu::Do8xyE(uint8_t x, uint8_t y __attribute__((unused)))
 {
   if (mRegister->registers[x] >> 7) {
     mRegister->registers[0x0F] = 1;

@@ -15,6 +15,9 @@
 int
 main(int argc, char* argv[])
 {
+  if (argc != 2) {
+    printf("Invalid usage, the correct usage is: ./emue8 <path to the ROM>\n");
+  }
   std::shared_ptr<Memory> mem = std::make_shared<Memory>();
   std::shared_ptr<Register> reg = std::make_shared<Register>();
   std::shared_ptr<Gfx> gfx = std::make_shared<Gfx>();

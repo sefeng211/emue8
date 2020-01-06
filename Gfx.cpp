@@ -67,11 +67,10 @@ Gfx::DoDxyn(uint8_t aVx,
             size_t aSize,
             bool& aCollision)
 {
-  for (int i = 0; i < aSize; i++) { // For each row
+  for (size_t i = 0; i < aSize; i++) { // For each row
     size_t startIndex = aVx + (aVy + i) * LOGIC_WIDTH;
     for (int k = 7; k >= 0; k--) {
       bool isNotSet = aByteArray[i] & (1 << k);
-
       if (!isNotSet) {
         mPixels[startIndex] ^= BLACK_PIXEL;
       } else {

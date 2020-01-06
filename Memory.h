@@ -44,12 +44,12 @@ public:
   void addToStack(uint8_t& aSP, uint16_t aData)
   {
     mStack[aSP] = aData;
-    aSP = aSP + 1;
+    aSP = (uint8_t)(aSP + 1);
   }
 
   uint16_t popFromStack(uint8_t& aSP)
   {
-    aSP = aSP - 1;
+    aSP = (uint8_t)(aSP - 1);
     uint16_t ret = mStack[aSP];
     return ret;
   }

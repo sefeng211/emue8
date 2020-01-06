@@ -59,7 +59,7 @@ Memory::PrintOutMemoryByRange(size_t aStart, size_t aEnd)
 {
   size_t counter = 0;
 
-  for (int i = aStart; i < aEnd; i++) {
+  for (size_t i = aStart; i < aEnd; i++) {
     counter++;
     printf("%x", data[i]);
     printf(" ");
@@ -75,7 +75,7 @@ void
 Memory::PrintOutMemory()
 {
   for (size_t i = 0; i < 4096; i++) {
-    printf("%d: %x \n", i, data[i]);
+    printf("%ld: %x \n", i, data[i]);
   }
   // cout << " ---------------- 0x000 (0) -------------------- " << endl;
   // PrintOutMemoryByRange(0, 0x200);
