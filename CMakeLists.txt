@@ -7,8 +7,11 @@ project(emue8)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+option(DEBUGGING_MESSAGE "Enable Debugging Messages" OFF) #OFF by default
 # To enable debugging build; A lot of debugging information is going to be printed out
-# add_compile_definitions(DEBUG)
+if (DEBUGGING_MESSAGE)
+	add_compile_definitions(DEBUG)
+endif(DEBUGGING_MESSAGE)
 
 # add the executable
 add_executable(emue8 Main.cpp Memory.cpp Cpu.cpp Gfx.cpp Keyboard.cpp)

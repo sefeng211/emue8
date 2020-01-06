@@ -10,9 +10,13 @@ To Compile
     make
 
 ```
+To compile the debugging version, which is going to print a lot of debugging messages
+```
+    cmake -DDEBUGGING_MESSAGE=ON ..
+    make
+```
 
 To run a ROM
-
 ```
     ./emue8 <path to the ROM>
 ```
